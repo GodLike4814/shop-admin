@@ -34,22 +34,22 @@ public class LoginController {
 
     @PostMapping("phoneLogin")
     public ResponseServer phoneLogin(String phone,String code) {
-        //Object phoneCode = redisTemplate.opsForValue().get("code_"+phone);
-        //if (phoneCode==null) return ResponseServer.error();
+       // Object phoneCode = redisTemplate.opsForValue().get("code_"+phone);
+       // if (phoneCode==null) return ResponseServer.error();
        // if (phoneCode.toString().equals(code)){
             LoginBean login=loginService.queryPhone(phone);
             if (login==null) {
                 loginService.savePhone(phone);
             }
             redisTemplate.opsForValue().set("cartid_"+phone,login.getCartId());
-           // redisTemplate.delete("code_"+phone);
+            redisTemplate.delete("code_"+phone);
             Map map=new HashMap();
             map.put("phone",phone);
             String token = JwtUtils.createToken(map);
             return ResponseServer.success(token);
-       // }else {
-          //  return ResponseServer.error(ServerEnum.ERROR);
-       // }
+//        }else {
+//            return ResponseServer.error(ServerEnum.ERROR);
+//        }
 
     }
 }

@@ -56,7 +56,7 @@ public class CartShowController {
     @LoginAnnotation
     public ResponseServer checkedAll(HttpServletRequest request){
         String phone = (String) request.getAttribute("phone");
-        System.out.println("进来了。");
+        //System.out.println("进来了。");
         cartService.checkedAll(phone);
         return ResponseServer.success();
     }
