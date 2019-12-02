@@ -5,8 +5,6 @@ import java.io.Serializable;
 
 public class BrandBean implements Serializable {
 
-    private String books;
-
     private Integer brandId;
 
     private String brandName;
