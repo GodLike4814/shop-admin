@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+</head>
+<body>
+<button onclick="getJwt()">生成token</button>
+<button onclick="jwt()">解析token</button>
+</body>
+<script>
+    function getJwt() {
+        $.ajax({
+            url: "http://localhost:8094/jwt/jwtTest",
+            type: "post",
+            dataType: "json",
+            success: function (result) {
+                const token = result.data
+                window.localStorage.setItem('token', token);
+                alert()
+            }
+
+        })
+    }
+
+    function jwt() {
+        var token = window.localStorage.getItem('token');
+        $.ajax({
+            url: "http://localhost:8094/jwt/getJwtTest",
+            type: "post",
+            dataType: "json",
+            data: {
+                "token": token
+            },
+            success: function (result) {
+
+            }
+
+        })
+
+    }
+</script>
+</html>

@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>购物车</title>
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/carts.css">
+</head>
+<body>
+
+<section class="cartMain">
+
+    <div class="cartMain_hd">
+        <ul class="order_lists cartTop">
+            <li class="list_chk" onclick="checkedAll()">
+                <!--所有商品全选-->
+                <input id="all" type="checkbox" id="all" class="whole_check">
+                <label id="checkAllStyle" class="mark"></label>
+                全选
+            </li>
+            <li class="list_con">商品信息</li>
+            <li class="list_price">单价</li>
+            <li class="list_amount">数量</li>
+            <li class="list_sum">金额</li>
+            <li class="list_op">操作</li>
+        </ul>
+    </div>
+
+    <div class="cartBox">
+        <div class="order_content">
+
+        </div>
+    </div>
+    <!--底部-->
+    <div class="bar-wrapper">
+        <div class="bar-right">
+            <div class="piece">已选商品<strong class="piece_num">0</strong>件</div>
+            <div class="totalMoney">共计: <strong class="total_text">0.00</strong></div>
+            <div class="calBtn"><a href="javascript:;" class="">结算</a></div>
+        </div>
+    </div>
+</section>
+<section class="model_bg"></section>
+<section class="my_model">
+    <p class="title">删除宝贝<span class="closeModel">X</span></p>
+    <p>您确认要删除该宝贝吗？</p>
+    <div class="opBtn"><a href="javascript:;" class="dialog-sure">确定</a><a href="javascript:;"
+                                                                           class="dialog-close">关闭</a></div>
+</section>
+<script src="js/jquery.min.js"></script>
+
+<script type="text/javascript">
+    var token = "";
+    if (sessionStorage.getItem("token")) {
+        token = sessionStorage.getItem("token");
+    }
+    $(function () {
+        $.ajaxSetup({ //发送请求前触发
+            contentType: "application/x-www-form-urlencoded;charset=utf-8",
+            complete: function (XMLHttpRequest, textStatus) {
+                var nologin = XMLHttpRequest.getResponseHeader("NOLOGIN");
+                //alert("返回的状态马："+nologin);
+                if (nologin == "6001") {
+                    // alert("试试吧")
+                    window.location.href = "login.html";
+                }
+            },
+            beforeSend: function (xhr) { //可以设置自定义标头
+                // alert("获取的token值:"+token);
+                xhr.setRequestHeader('token', token);
+            }
+        })
+        showCarts();
+    })
+
+
+    function showCarts() {
+        $.ajax({
+            url: "http://localhost:8095/cartsShow",
+            type: "get",
+            dataType: "json",
+            async: false,
+            success: function (result) {
+                var cartList = result.data.cartList;
+                var isCheckCount = 0;
+                var checkAll = false;
+                if (cartList.length > 0) {
+                    var cartHtml = '';
+                    for (var i = 0; i < cartList.length; i++) {
+                        cartHtml += ' <ul class="order_lists" >';
+                        cartHtml += ' <li class="list_chk" name="listChk">';
+                        cartHtml += ' <input type="checkbox" id="checkbox_' + cartList[i].productId + '" class="son_check" value="' + cartList[i].productId + '" checked="' + cartList[i].isChecked + '">';
+                        if (cartList[i].isChecked) {
+                            cartHtml += '<label  class="mark"></label>';
+                            isCheckCount++;
+
+                        } else {
+                            cartHtml += '<label></label>';
+                            checkAll = true;
+                        }
+                        cartHtml += '  </li>';
+                        cartHtml += ' <li class="list_con">';
+                        cartHtml += '  <div class="list_img"><a href="javascript:;"><img src="' + cartList[i].mainImg + '" alt=""></a></div>';
+                        cartHtml += ' <div class="list_text"><a href="javascript:;"><span>' + cartList[i].productName + '</span></a></div>';
+                        cartHtml += ' </li>';
+                        cartHtml += ' <li class="list_price">';
+                        cartHtml += '  <p class="price">￥<span>' + cartList[i].price + '</span></p>';
+                        cartHtml += '</li>';
+                        cartHtml += '<li class="list_amount">';
+                        cartHtml += ' <div class="amount_box">';
+                        cartHtml += '  <a href="javascript:void(0);" class="reduce reSty" onclick="removeCartNum(' + cartList[i].productId + ')">-</a>';
+                        cartHtml += '  <input type="text" oldSum="' + cartList[i].count + '" class="sum"  onchange="customCartNum(this,' + cartList[i].productId + ')" value="' + cartList[i].count + '">';
+                        cartHtml += ' <a href="javascript:void(0);" onclick="addCartNum(' + cartList[i].productId + ')"  class="plus">+</a>';
+                        cartHtml += '  </div>';
+                        cartHtml += '   </li>';
+                        cartHtml += '  <li class="list_sum">';
+                        cartHtml += '   <p class="sum_price">￥<span >' + cartList[i].subtotal + '</span></p>';
+                        cartHtml += ' </li>';
+                        cartHtml += ' <li class="list_op">';
+                        cartHtml += '  <p class="del"><a href="javascript:;" class="delBtn" onclick="deleteProduct(' + cartList[i].productId + ')">移除商品</a></p>';
+                        cartHtml += ' </li>';
+                        cartHtml += '</ul>';
+                    }
+                    $(".order_content").html(cartHtml);
+                }
+                else {
+                    $("#checkAllStyle").removeClass("mark");
+                }
+                if (checkAll) {
+                    $("#checkAllStyle").removeClass("mark");
+                } else {
+                    $("#checkAllStyle").addClass("mark");
+                }
+                $(".piece_num").html(isCheckCount);
+                $(".total_text").html(result.data.total);
+
+                if (isCheckCount > 0) {
+                    $(".calBtn").find("a").addClass("btn_sty");
+                } else {
+                    $(".calBtn").find("a").removeClass("btn_sty");
+                }
+            }
+        })
+        isChecked();
+    }
+
+    function isChecked() {
+        $("li[name='listChk']").click(function () {
+            var productId = $(this).find("input").val();
+            alert(productId)
+            $.ajax({
+                url: "http://localhost:8095/cartsShow",
+                type: "post",
+                dataType: "json",
+                async: false,
+                data: {
+                    "productId": productId
+                },
+                success: function (result) {
+
+                    if (result.code == 200) {
+                        showCarts();
+                    }
+                }
+            })
+        })
+        $("#a").removeAttr("onclick");
+    }
+
+    function addCartNum(productId) {
+        $.ajax({
+            url: "http://localhost:8095/cartsShow/addCartNum",
+            dataType: "json",
+            type: "post",
+            async: false,
+            data: {
+                "productId": productId,
+                "status": "add"
+            },
+            success: function (result) {
+                if (result.code == 200) {
+                    showCarts();
+                }
+            }
+
+        })
+    }
+
+    function removeCartNum(productId) {
+        $.ajax({
+            url: "http://localhost:8095/cartsShow/addCartNum",
+            dataType: "json",
+            type: "post",
+            async: false,
+            data: {
+                "productId": productId,
+                "status": "remove"
+            },
+            success: function (result) {
+                if (result.code == 200) {
+                    showCarts();
+                }
+            }
+
+        })
+    }
+
+    function customCartNum(obj, productId) {
+        var count = obj.value
+        $.ajax({
+            url: "http://localhost:8095/cartsShow/addCartNum",
+            dataType: "json",
+            type: "post",
+            async: false,
+            data: {
+                "count": count,
+                "productId": productId,
+                "status": "custom"
+            },
+            success: function (result) {
+                if (result.code == 200) {
+                    showCarts();
+                }
+            }
+
+        })
+    }
+
+    function deleteProduct(productId) {
+        $.ajax({
+            url: "http://localhost:8095/cartsShow",
+            dataType: "json",
+            type: "delete",
+            async: false,
+            data: {
+                "productId": productId,
+            },
+            success: function (result) {
+                if (result.code == 200) {
+                    showCarts();
+                } else {
+                    alert("您的购物车已经没有商品啦，快去选购吧~")
+                    window.location.href = "index.html"
+                }
+            }
+        })
+    }
+
+    function checkedAll() {
+
+        $.ajax({
+            url: "http://localhost:8095/cartsShow/checkedAll",
+            dataType: "json",
+            type: "get",
+            async: false,
+            success: function (result) {
+                if (result.code == 200) {
+
+                    showCarts();
+                }
+            }
+        })
+    }
+
+
+</script>
+</body>
+</html>

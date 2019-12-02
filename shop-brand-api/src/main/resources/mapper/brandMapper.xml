@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.fh.dao.IBrandDao">
+
+    <select id="queryBrandByCateId" parameterType="java.lang.Integer" resultType="com.fh.bean.BrandBean">
+        select b.brand_id brandId,b.brand_name brandName,b.brand_logo brandLogo,b.brand_web brandWeb,
+        b.telephone telephone,
+        bc.categroy_id categoryId from t_shop_brand b LEFT JOIN
+        t_shop_brand_categroy bc ON
+        b.brand_id=bc.brand_id
+    </select>
+
+</mapper>
