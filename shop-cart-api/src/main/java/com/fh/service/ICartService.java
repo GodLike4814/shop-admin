@@ -20,4 +20,6 @@ public interface ICartService {
     void checkedAll(String phone);
 
     Long queryCartCount(String userPhone);
+
+    ResponseServer queryCartsChecked(String phone);
 }

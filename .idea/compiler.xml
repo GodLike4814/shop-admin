@@ -10,6 +10,7 @@
         <module name="shop-cart-api" />
         <module name="shop-commons" />
         <module name="shop-login-api" />
+        <module name="shop-order-api" />
         <module name="shop-product-api" />
         <module name="shop-type-api" />
         <module name="shop-web" />
@@ -22,6 +23,7 @@
       <module name="shop-commons (1)" target="1.8" />
       <module name="shop-commons (2)" target="1.8" />
       <module name="shop-login-api" target="1.8" />
+      <module name="shop-order-api" target="1.8" />
       <module name="shop-product-api" target="1.8" />
       <module name="shop-type-api" target="1.8" />
       <module name="shop-web" target="1.7" />

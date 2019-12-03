@@ -13,6 +13,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -140,5 +141,28 @@ public class CarServiceImpl implements ICartService {
         count=redisTemplate.opsForHash().size(cartId);
         return count;
 
+    }
+
+    @Override
+    public ResponseServer queryCartsChecked(String phone) {
+      String  cartId = (String) redisTemplate.opsForValue().get("cartid_" + phone);
+        List<CartBean> cartList = redisTemplate.opsForHash().values(cartId);
+        ArrayList<CartBean> checkList = new ArrayList<>();
+        HashMap<String, Object> map = new HashMap<>();
+        long countSum = 01;
+        BigDecimal countPrice = BigDecimal.valueOf(0.00);
+        for (CartBean cart:cartList) {
+            if(cart.getIsChecked()){
+                BigDecimal bigDecimal = BigDecimal.valueOf(0.00);
+                checkList.add(cart);
+                countSum+=cart.getCount();
+                BigDecimal count = new BigDecimal(cart.getCount());
+                countPrice = countPrice.add(bigDecimal.add(cart.getPrice()).multiply(count));
+            }
+        }
+        map.put("checkList",checkList);
+        map.put("countPrice",countPrice);
+        map.put("countSum",countSum);
+        return ResponseServer.success(map);
     }
 }

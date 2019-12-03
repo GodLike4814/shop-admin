@@ -21,6 +21,14 @@ public class CartController {
         String userPhone= (String) request.getAttribute("phone");
         return cartService.addCart(productId,userPhone);
     }
+
+    @GetMapping("queryCartsChecked")
+    @LoginAnnotation
+    public ResponseServer queryCartsChecked(HttpServletRequest request){
+        String phone = (String) request.getAttribute("phone");
+        return cartService.queryCartsChecked(phone);
+    }
+
     @GetMapping
     @LoginAnnotation
     public ResponseServer cartAll(){

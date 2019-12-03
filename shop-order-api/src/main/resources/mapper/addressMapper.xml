@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.fh.dao.IAddressDao">
+
+    <select id="queryAddress" resultType="com.fh.bean.AddressBean" parameterType="String">
+      select addressId,addressName,addressLocal,addressPhone,locals,email,phone,updateTime from t_shop_address
+      where phone=#{phone}
+    </select>
+
+    <select id="byOneAddress" resultType="com.fh.bean.AddressBean" parameterType="Integer">
+      select addressId,addressName,addressLocal,addressPhone,locals,email,phone from t_shop_address
+      where addressId = #{addressId}
+    </select>
+
+    <insert id="addAddress" parameterType="com.fh.bean.AddressBean">
+        insert into t_shop_address(addressName,addressLocal,addressPhone,locals,email,phone,updateTime)
+        values (#{addressName},#{addressLocal},#{addressPhone},#{locals},#{email},#{phone},#{updateTime})
+    </insert>
+
+    <select id="queryAddressById" parameterType="Integer" resultType="com.fh.bean.AddressBean">
+        select addressId,addressName,addressLocal,addressPhone,locals,email from t_shop_address
+        where addressId = #{addressId}
+    </select>
+
+    <update id="updateAddress" parameterType="com.fh.bean.AddressBean">
+        update t_shop_address set addressName=#{addressName},addressLocal=#{addressLocal},addressPhone=#{addressPhone},
+        email=#{email},locals=#{locals},updateTime=#{updateTime} where addressId=#{addressId}
+    </update>
+
+</mapper>

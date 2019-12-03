@@ -16,6 +16,7 @@
         <option value="$PROJECT_DIR$/shop-type-api/pom.xml" />
         <option value="$PROJECT_DIR$/shop-brand-api/pom.xml" />
         <option value="$PROJECT_DIR$/shop-login-api/pom.xml" />
+        <option value="$PROJECT_DIR$/shop-order-api/pom.xml" />
       </list>
     </option>
   </component>
