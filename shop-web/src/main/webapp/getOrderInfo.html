@@ -239,7 +239,7 @@
 		<div class="fc-receiverInfo">寄送至:北京市海淀区三环内 中关村软件园9号楼 收货人：某某某 159****3201</div>
 	</div>
 	<div class="submit">
-		<a class="sui-btn btn-danger btn-xlarge" href="pay.html">提交订单</a>
+		<a class="sui-btn btn-danger btn-xlarge" href="javascript:void(0)" onclick="submitOrder()">提交订单</a>
 	</div>
 </div>
 <!-- 底部栏位 -->
@@ -522,7 +522,7 @@
                     for (var i=0;i<addressList.length;i++) {
                         var address=addressList[i];
                         addressHtml+='<div  addressId=' + address.addressId + ' >';
-                        addressHtml+='<div class="con name"><a href="javascript:;" >'+address.addressName+'<span title="点击取消选择">&nbsp;</a></div>';
+                        addressHtml+='<div class="con name " addressId="'+addressList[i].addressId+'"><a href="javascript:;" >'+address.addressName+'<span title="点击取消选择">&nbsp;</a></div>';
                         addressHtml+='<div class="con address">'+address.addressLocal+' <span>'+address.addressPhone+'</span>';
                         if (i == 0) {
                             $(".fc-receiverInfo").html('寄送至:' + address.addressLocal + ' 收货人：' + address.addressName + ' ' + address.addressPhone);
@@ -624,6 +624,38 @@
     function toAdd(){
         $(".modal-title").html("增加收货地址");
         clearForm();
+    }
+
+    function submitOrder(){
+        var addressId=$(".addr-item .selected").attr("addressId");
+        $.ajax({
+            url:"http://localhost:8096/orders/createOrder",
+            type:"put",
+            data:{
+                "addressId":addressId
+            },
+            dataType:"json",
+            success:function (result) {
+                if(result.code == 200){
+                    var resultData=result.data;
+                    var understockList=resultData.understockList;
+                    var  alertMsg="你购买的商品：";
+                    for(var i=0;i<understockList.length;i++){
+                        alertMsg+=understockList[i].productName+";";
+                    }
+                    alertMsg+="库存不足";
+                    if(understockList.length>0){
+                        alert(alertMsg);
+                    }
+                    alert(result.data.outTradeNo);
+                    sessionStorage.setItem("outTradeNo",result.data.outTradeNo);
+                    sessionStorage.setItem("orderId",result.data.orderId);
+                    window.location.href="pay.html";
+                }else{
+                    alert(result.message);
+                }
+            }
+        })
     }
 
 

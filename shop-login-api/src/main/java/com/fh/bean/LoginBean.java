@@ -1,8 +1,9 @@
 package com.fh.bean;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class LoginBean {
+public class LoginBean implements Serializable {
 
     private int id;
 

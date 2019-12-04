@@ -3,8 +3,18 @@
 
 <mapper namespace="com.fh.dao.IOrderDao">
 
-    <!--<insert id="" parameterType="string">-->
+    <insert id="insert" parameterType="com.fh.bean.OrderItem">
+    insert into t_shop_order_detail(orderId,userId,productId,productName,price,subTotalPrice,image,count )
+    values (#{orderId},#{userId},#{productId},#{productName},#{price},#{subTotalPrice},#{image},#{count})
+    </insert>
 
-    <!--</insert>-->
+    <insert id="insertOrder" parameterType="com.fh.bean.Order">
+    insert into t_shop_order(id,userId,status,totalPrice,totalCount,payType,addressId,createTime)
+    values (#{id},#{userId},#{status},#{totalPrice},#{totalCount},#{payType},#{addressId},#{createTime})
+    </insert>
+
+    <update id="updateProductId">
+        update t_shop_product set stock=stock-#{count} where id=#{productId} and stock-#{count}>-1
+    </update>
 
 </mapper>

@@ -19,6 +19,9 @@ public enum ServerEnum {
     SERVER_CONNECT_ERROR(9001, "连接的服务器超时"),
     SERVER_BUSYNESS(9002, "服务器繁忙"),
     SERVER_ERROR(9003, "服务器未知异常"),
+    ALL_STOCK_NULL(9004,"商品的库存都不足了"),
+    NO_ORDER_TO_PAY(20002,"没有要支付的订单"),
+    CRATER_PAY_ERROR(20003,"生成支付二维码失败"),
     SUCCESS(200, "成功"),
     ERROR(500, "失败");
 

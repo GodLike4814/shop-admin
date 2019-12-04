@@ -35,6 +35,9 @@ public class ResponseServer {
         return new ResponseServer(ServerEnum.SUCCESS.getCode(), ServerEnum.SUCCESS.getMessage(), data);
     }
 
+    public static ResponseServer error(Integer code,String msg){
+        return new ResponseServer(code,msg);
+    }
     public Integer getCode() {
         return code;
     }

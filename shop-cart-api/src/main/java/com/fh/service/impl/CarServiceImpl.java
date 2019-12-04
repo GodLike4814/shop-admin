@@ -149,7 +149,7 @@ public class CarServiceImpl implements ICartService {
         List<CartBean> cartList = redisTemplate.opsForHash().values(cartId);
         ArrayList<CartBean> checkList = new ArrayList<>();
         HashMap<String, Object> map = new HashMap<>();
-        long countSum = 01;
+        long countSum = 0;
         BigDecimal countPrice = BigDecimal.valueOf(0.00);
         for (CartBean cart:cartList) {
             if(cart.getIsChecked()){

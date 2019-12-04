@@ -42,6 +42,7 @@ public class LoginController {
                 loginService.savePhone(phone);
             }
             redisTemplate.opsForValue().set("cartid_"+phone,login.getCartId());
+            redisTemplate.opsForValue().set("user_"+phone,login);
             redisTemplate.delete("code_"+phone);
             Map map=new HashMap();
             map.put("phone",phone);
